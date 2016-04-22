@@ -1,92 +1,58 @@
 module ApiDocumenter
   class Document
+    attr_accessor :title, :route, :routes
     def initialize
       @routes = []
     end
-    def title t
-      @title = t
-    end
-    def t
-      @title
-    end
-    def add_route
-      route = Route.new
-      @routes << route
-      yield(route)
-    end
-    def routes
+    def content
       retval = ''
-      @routes.each do |route|
+      @routes.each do |r|
         retval << %Q{
-<div class='route' id='#{route.id}'>
+<div class='route' id='#{r.id}'>
 <p>
-<span class='verb'>#{route.v}</span>
-<span class='uri'>#{route.u}</span>
+<span class='verb'>#{r.verb}</span>
+<span class='uri'>#{r.uri}</span>
 </p>
-#{route.req}
+#{r.content}
 </div>
 }
       end
       retval
     end
     def toc
-      ret = []
-      ret << "<div class='toc'>"
-      @routes.each do |route|
-        ret << "<a href='\##{route.id}'>#{route.v} #{route.u}</a>"
+      retval = []
+      retval << "<div class='toc'>"
+      @routes.each do |r|
+        retval << "<a href='\##{r.id}'>#{r.verb} #{r.uri}</a>"
       end
-      ret << "</div>"
-      ret.join "\n"
+      retval << "</div>"
+      retval.join "\n"
     end
   end
 
   class Route
-    def verb v
-      @verb = v
-    end
-    def v
-      @verb
-    end
-    def uri u
-      @uri = u
-    end
-    def u
-      @uri
-    end
+    attr_accessor :verb, :uri, :context, :request
     def id
       (@verb + @uri).tr('/', '-')
     end
-    def request
-      @request = Request.new
-      yield(@request)
-    end
-    def req
+    def content
       %Q{
 <div class='input'>
-<p>#{@request.d}</p>
-#{@request.s}
+<p>#{@request.description}</p>
+#{@request.content}
 </div>
 }
     end
   end
 
   class Request
-    def description d
-      @description = d
-    end
-    def d
-      @description
-    end
-    def spec
-      @spec = Spec.new
-      yield(@spec)
-    end
-    def s
+    attr_accessor :description, :spec
+    def content
       ret = %Q{
 <div class='spec'>
 <table>
 }
-    @spec.t.each do |name, type, desc|
+    @spec.table.each do |name, type, desc|
       ret << %Q{
 <tr>
 <td class='name'>
@@ -99,7 +65,7 @@ module ApiDocumenter
     end
     ret << %Q{
 </table>
-#{@spec.e}
+#{@spec.content}
 </div>
 }
     ret
@@ -107,16 +73,8 @@ module ApiDocumenter
   end
 
   class Spec
-    def table t
-      @table = t
-    end
-    def t
-      @table
-    end
-    def example e
-      @example = e
-    end
-    def e
+    attr_accessor :table, :example
+    def content
       return unless @example      
       ret = []
       ret << "<div class='example'>"
@@ -142,8 +100,8 @@ module ApiDocumenter
 
   module_function
   def document
-    d = Document.new
-    yield(d)
+    @d = Document.new
+    yield
     puts %Q{
 <!DOCTYPE html>
 <html lang='en'>
@@ -151,16 +109,51 @@ module ApiDocumenter
 <meta charset='UTF-8' />
 <html>
 <head>
-<title>#{d.t}</title>
+<title>#{@d.title}</title>
 <link href='css/style.css' rel='stylesheet' type='text/css' />
 </head>
 <body>
-#{d.toc}
+#{@d.toc}
 <div class='content'>
-#{d.routes}
+#{@d.content}
 </div>
 </body>
 </html>
 }
+  end
+  def title t
+    @d.title = t
+  end
+  def add_route
+    r = Route.new
+    @d.route = r
+    @d.routes << r
+    yield
+  end
+  def verb v
+    @d.route.verb = v
+  end
+  def uri u
+    @d.route.uri = u
+  end
+  def request
+    r = Request.new
+    @d.route.request = r
+    @d.route.context = r
+    yield
+  end
+  def description d
+    @d.route.context.description = d
+  end
+  def spec
+    s = Spec.new
+    @d.route.context.spec = s
+    yield
+  end
+  def table t
+    @d.route.context.spec.table = t
+  end
+  def example e
+    @d.route.context.spec.example = e
   end
 end
