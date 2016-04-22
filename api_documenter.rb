@@ -1,57 +1,92 @@
 module ApiDocumenter
-  module_function
-  def document title
-    @route_ids = []
-    @routes = []
-    yield
-    puts %Q{
-<!DOCTYPE html>
-<html lang='en'>
-<head>
-<meta charset='UTF-8' />
-<html>
-<head>
-<title>#{title}</title>
-<link href='css/style.css' rel='stylesheet' type='text/css' />
-</head>
-<body>
-#{toc}
-<div class='content'>
-#{@routes.join}
-</div>
-</body>
-</html>
-}
-  end
-  def route verb: '', uri: ''
-    id = {verb: verb, uri: uri}
-    @route_ids << id
-    @route_content = []
-    yield
-    @routes << %Q{
-<div class='route' id='#{route_id(id)}'>
+  class Document
+    def initialize
+      @routes = []
+    end
+    def title t
+      @title = t
+    end
+    def t
+      @title
+    end
+    def add_route
+      route = Route.new
+      @routes << route
+      yield(route)
+    end
+    def routes
+      retval = ''
+      @routes.each do |route|
+        retval << %Q{
+<div class='route' id='#{route.id}'>
 <p>
-<span class='verb'>#{verb}</span>
-<span class='uri'>#{uri}</span>
+<span class='verb'>#{route.v}</span>
+<span class='uri'>#{route.u}</span>
 </p>
-#{@route_content.join}
+#{route.req}
 </div>
 }
+      end
+      retval
+    end
+    def toc
+      ret = []
+      ret << "<div class='toc'>"
+      @routes.each do |route|
+        ret << "<a href='\##{route.id}'>#{route.v} #{route.u}</a>"
+      end
+      ret << "</div>"
+      ret.join "\n"
+    end
   end
-  def request desc
-    @route_content << %Q{
+
+  class Route
+    def verb v
+      @verb = v
+    end
+    def v
+      @verb
+    end
+    def uri u
+      @uri = u
+    end
+    def u
+      @uri
+    end
+    def id
+      (@verb + @uri).tr('/', '-')
+    end
+    def request
+      @request = Request.new
+      yield(@request)
+    end
+    def req
+      %Q{
 <div class='input'>
-<p>#{desc}</p>
-#{yield}
+<p>#{@request.d}</p>
+#{@request.s}
 </div>
 }
+    end
   end
-  def spec rows
-    ret = %Q{
+
+  class Request
+    def description d
+      @description = d
+    end
+    def d
+      @description
+    end
+    def spec
+      @spec = Spec.new
+      yield(@spec)
+    end
+    def s
+      ret = %Q{
 <div class='spec'>
 <table>
 }
-    rows.each do |name, type, desc|
+    @spec.t.each do |name, type, desc|
       ret << %Q{
 <tr>
 <td class='name'>
@@ -64,36 +99,68 @@ module ApiDocumenter
     end
     ret << %Q{
 </table>
-#{example(yield) if block_given?}
+#{@spec.e}
 </div>
 }
     ret
+    end
   end
 
-  private
-    def toc
-      ret = []
-      ret << "<div class='toc'>"
-      @route_ids.each do |id|
-        ret << "<a href='\##{route_id(id)}'>#{id[:verb]} #{id[:uri]}</a>"
-      end
-      ret << "</div>"
-      ret.join "\n"
+  class Spec
+    def table t
+      @table = t
     end
-    def route_id id
-      "#{id[:verb] + id[:uri]}".tr('/', '-')
+    def t
+      @table
     end
-    def example hash
-      return unless hash      
+    def example e
+      @example = e
+    end
+    def e
+      return unless @example      
       ret = []
       ret << "<div class='example'>"
       ret << "<p>Example</p>"
       ret << "<pre>{"
-      hash.each do |k, v|
-        ret << %Q{ <span class='json-key'>"#{k}"</span>: "#{v}"}
+      pre = []
+      @example.each do |k, v|
+        case v
+        when NilClass
+          pre << %Q{  <span class='json-key'>"#{k}"</span>: <span class='json-token'>NULL</span>}
+        when String
+          pre << %Q{  <span class='json-key'>"#{k}"</span>: "#{v}"}
+        else
+          pre << %Q{  <span class='json-key'>"#{k}"</span>: <span class='json-token'>#{v}</span>}
+        end
       end
+      ret << pre.join(",\n")
       ret << "}</pre>"
       ret << "</div>"
       ret.join "\n"
     end
+  end
+
+  module_function
+  def document
+    d = Document.new
+    yield(d)
+    puts %Q{
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='UTF-8' />
+<html>
+<head>
+<title>#{d.t}</title>
+<link href='css/style.css' rel='stylesheet' type='text/css' />
+</head>
+<body>
+#{d.toc}
+<div class='content'>
+#{d.routes}
+</div>
+</body>
+</html>
+}
+  end
 end
