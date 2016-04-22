@@ -1,79 +1,98 @@
 module ApiDocumenter
   module_function
   def document title
-    ret = []
-    ret << "<html>"
-    ret << "<head>"
-    ret << "<title>#{title}</title>"
-    ret << "</head>"
-    ret << "<body>"
-    body = yield
-    ret << toc
-    ret << "<div class='content'>"
-    ret << body
-    ret << "</div>"
-    ret << "</body>"
-    ret << "</html>"
-    puts ret.join "\n"
+    @route_ids = []
+    @routes = []
+    yield
+    puts %Q{
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='UTF-8' />
+<html>
+<head>
+<title>#{title}</title>
+<link href='css/style.css' rel='stylesheet' type='text/css' />
+</head>
+<body>
+#{toc}
+<div class='content'>
+#{@routes.join}
+</div>
+</body>
+</html>
+}
   end
   def route verb: '', uri: ''
-    @routes ||= []
-    @routes << uri
-    ret = []
-    ret << "<div class='route'>"
-    ret << "<p>"
-    ret << "<span class='verb'>#{verb}</span>"
-    ret << "<span class='uri'>#{uri}</span>"
-    ret << "</p>"
-    ret << yield
-    ret << "</div>"
-    ret.join "\n"
+    id = {verb: verb, uri: uri}
+    @route_ids << id
+    @route_content = []
+    yield
+    @routes << %Q{
+<div class='route' id='#{route_id(id)}'>
+<p>
+<span class='verb'>#{verb}</span>
+<span class='uri'>#{uri}</span>
+</p>
+#{@route_content.join}
+</div>
+}
   end
   def request desc
-    ret = []
-    ret << "<div class='input'>"
-    ret << "<p>#{desc}</p>"
-    ret << yield
-    ret << "</div>"
-    ret.join "\n"
+    @route_content << %Q{
+<div class='input'>
+<p>#{desc}</p>
+#{yield}
+</div>
+}
   end
   def spec rows
-    ret = []
-    ret << "<div class='spec'>"
-    ret << "<table>"
+    ret = %Q{
+<div class='spec'>
+<table>
+}
     rows.each do |name, type, desc|
-      ret << "<tr>"
-      ret << "<td class='name'>"
-      ret << "<span class='name'>#{name}</span>"
-      ret << "<span class='type'>#{type}</span>"
-      ret << "</td>"
-      ret << "<td class='description'>#{desc}</td>"
-      ret << "</tr>"
+      ret << %Q{
+<tr>
+<td class='name'>
+<span class='name'>#{name}</span>
+<span class='type'>#{type}</span>
+</td>
+<td class='description'>#{desc}</td>
+</tr>
+}
     end
-    ret << "</table>"
-    ret << example(yield) if block_given?
-    ret.join "\n"
-  end
-  def example hash
-    return unless hash      
-    ret = []
-    ret << "<pre>"
-    ret << "{"
-    hash.each do |k, v|
-      ret << " \"#{k}\": \"#{v}\""
-    end
-    ret << "}"
-    ret << "</pre>"
-    ret.join "\n"
+    ret << %Q{
+</table>
+#{example(yield) if block_given?}
+</div>
+}
+    ret
   end
 
   private
     def toc
       ret = []
       ret << "<div class='toc'>"
-      @routes.each do |route|
-        ret << "<p>#{route}</p>"
+      @route_ids.each do |id|
+        ret << "<a href='\##{route_id(id)}'>#{id[:verb]} #{id[:uri]}</a>"
       end
+      ret << "</div>"
+      ret.join "\n"
+    end
+    def route_id id
+      "#{id[:verb] + id[:uri]}".tr('/', '-')
+    end
+    def example hash
+      return unless hash      
+      ret = []
+      ret << "<div class='example'>"
+      ret << "<p>Example</p>"
+      ret << "<pre>{"
+      hash.each do |k, v|
+        ret << %Q{ <span class='json-key'>"#{k}"</span>: "#{v}"}
+      end
+      ret << "}</pre>"
       ret << "</div>"
       ret.join "\n"
     end
