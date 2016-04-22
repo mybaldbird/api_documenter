@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='UTF-8' />
+<html>
+<head>
+<title>Library</title>
+<link href='css/style.css' rel='stylesheet' type='text/css' />
+</head>
+<body>
+<div class='toc'>
+<a href='#POST-book'>POST /book</a>
+<a href='#PATCH-book-id'>PATCH /book/id</a>
+</div>
+<div class='content'>
+
+<div class='route' id='POST-book'>
+<p>
+<span class='verb'>POST</span>
+<span class='uri'>/book</span>
+</p>
+
+<div class='input'>
+<p>Create a new book.</p>
+
+<div class='spec'>
+<table>
+
+<tr>
+<td class='name'>
+<span class='name'>title</span>
+<span class='type'>string</span>
+</td>
+<td class='description'>Title of the book.</td>
+</tr>
+
+<tr>
+<td class='name'>
+<span class='name'>author</span>
+<span class='type'>string</span>
+</td>
+<td class='description'>Author of the book.</td>
+</tr>
+
+<tr>
+<td class='name'>
+<span class='name'>copies</span>
+<span class='type'>integer</span>
+</td>
+<td class='description'>Number of copies of this book in the library.</td>
+</tr>
+
+</table>
+<div class='example'>
+<p>Example</p>
+<pre>{
+ <span class='json-key'>"title"</span>: "A Tale of Two Cities"
+ <span class='json-key'>"author"</span>: "Charles Dickens"
+ <span class='json-key'>"copies"</span>: "5"
+}</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+<div class='route' id='PATCH-book-id'>
+<p>
+<span class='verb'>PATCH</span>
+<span class='uri'>/book/id</span>
+</p>
+
+<div class='input'>
+<p>Update a book's properties.</p>
+
+<div class='spec'>
+<table>
+
+<tr>
+<td class='name'>
+<span class='name'>title</span>
+<span class='type'>string</span>
+</td>
+<td class='description'>Title of the book.</td>
+</tr>
+
+<tr>
+<td class='name'>
+<span class='name'>author</span>
+<span class='type'>string</span>
+</td>
+<td class='description'>Author of the book.</td>
+</tr>
+
+<tr>
+<td class='name'>
+<span class='name'>copies</span>
+<span class='type'>integer</span>
+</td>
+<td class='description'>Number of copies of this book in the library.</td>
+</tr>
+
+</table>
+<div class='example'>
+<p>Example</p>
+<pre>{
+ <span class='json-key'>"copies"</span>: "4"
+}</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</body>
+</html>
