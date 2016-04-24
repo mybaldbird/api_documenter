@@ -17,8 +17,6 @@
 
 <div><a href='#books-create'>POST /books</a></div>
 
-<div><a href='#books-update'>PATCH /books/&lt;id&gt;</a></div>
-
 </div>
 
 <div>
@@ -28,8 +26,6 @@
 <a href='#employees'>Employees:</a>
 
 <div><a href='#employees-create'>POST /employees</a></div>
-
-<div><a href='#employees-update'>PATCH /employees/&lt;id&gt;</a></div>
 
 </div>
 
@@ -63,6 +59,7 @@
 
 <div class='request'>
 <p>Create a new book.</p>
+
 <div class='spec'>
 <table>
 
@@ -94,6 +91,7 @@
 
 <div class='example'>
 <p>Example</p>
+<pre class='header'>POST /books</pre>
 <pre>{
   <span class='json-key'>"title"</span>: "A Tale of Two Cities",
   <span class='json-key'>"author"</span>: "Charles Dickens",
@@ -102,20 +100,27 @@
 </div>
 
 </div>
-</div>
 
 </div>
 
-<div class='route' id='books-update'>
-<p>
-<span class='verb'>PATCH</span>
-<span class='uri'>/books/&lt;id&gt;</span>
-</p>
 
-<div class='request'>
-<p>Update the properties of a book.</p>
+<div class='responses'>
+<p>Responses</p>
+
+<div class='response'>
+<p class='title'>Success</p>
+<p>The book was created successfully.</p>
+
 <div class='spec'>
 <table>
+
+<tr>
+<td class='name'>
+<span class='name'>id</span>
+<span class='type'>integer</span>
+</td>
+<td class='description'>ID of the book.</td>
+</tr>
 
 <tr>
 <td class='name'>
@@ -145,12 +150,19 @@
 
 <div class='example'>
 <p>Example</p>
+<pre class='header'>Response code 200</pre>
 <pre>{
-  <span class='json-key'>"copies"</span>: <span class='json-token'>4</span>
+  <span class='json-key'>"id"</span>: <span class='json-token'>1</span>,
+  <span class='json-key'>"title"</span>: "A Tale of Two Cities",
+  <span class='json-key'>"author"</span>: "Charles Dickens",
+  <span class='json-key'>"copies"</span>: <span class='json-token'>5</span>
 }</pre>
 </div>
 
 </div>
+
+</div>
+
 </div>
 
 </div>
@@ -173,6 +185,7 @@
 
 <div class='request'>
 <p>Create a new employee.</p>
+
 <div class='spec'>
 <table>
 
@@ -204,6 +217,7 @@
 
 <div class='example'>
 <p>Example</p>
+<pre class='header'>POST /employees</pre>
 <pre>{
   <span class='json-key'>"name"</span>: "Bob Loblaw",
   <span class='json-key'>"title"</span>: "Internet Marketing Manager",
@@ -212,56 +226,9 @@
 </div>
 
 </div>
-</div>
 
 </div>
 
-<div class='route' id='employees-update'>
-<p>
-<span class='verb'>PATCH</span>
-<span class='uri'>/employees/&lt;id&gt;</span>
-</p>
-
-<div class='request'>
-<p>Update the properties of an employee.</p>
-<div class='spec'>
-<table>
-
-<tr>
-<td class='name'>
-<span class='name'>name</span>
-<span class='type'>string</span>
-</td>
-<td class='description'>Name of the employee.</td>
-</tr>
-
-<tr>
-<td class='name'>
-<span class='name'>title</span>
-<span class='type'>string</span>
-</td>
-<td class='description'>Job title of the employee.</td>
-</tr>
-
-<tr>
-<td class='name'>
-<span class='name'>favorite</span>
-<span class='type'>integer</span>
-</td>
-<td class='description'>ID of their favorite <a href='#books' class='link'>book</a>.</td>
-</tr>
-
-</table>
-
-<div class='example'>
-<p>Example</p>
-<pre>{
-  <span class='json-key'>"title"</span>: "Janitor"
-}</pre>
-</div>
-
-</div>
-</div>
 
 </div>
 
@@ -279,6 +246,7 @@
 
 <div class='request'>
 <p>Create a new volunteer.</p>
+
 <div class='spec'>
 <table>
 
@@ -302,6 +270,7 @@
 
 <div class='example'>
 <p>Example</p>
+<pre class='header'>POST /volunteers</pre>
 <pre>{
   <span class='json-key'>"name"</span>: "Vin Diesel",
   <span class='json-key'>"title"</span>: "Bookmobile Driver"
@@ -309,7 +278,9 @@
 </div>
 
 </div>
+
 </div>
+
 
 </div>
 
@@ -321,6 +292,7 @@
 
 <div class='request'>
 <p>Update the properties of a volunteer.</p>
+
 <div class='spec'>
 <table>
 
@@ -344,13 +316,16 @@
 
 <div class='example'>
 <p>Example</p>
+<pre class='header'>PATCH /volunteers/23</pre>
 <pre>{
   <span class='json-key'>"title"</span>: "Library Assistant"
 }</pre>
 </div>
 
 </div>
+
 </div>
+
 
 </div>
 

@@ -132,8 +132,34 @@ div.route > p {
   font-weight: bold;
 }
 
+div.route > p span.verb {
+  color: #ed7D00;
+}
+
 div.request > p {
   margin: 0;
+  width: 433px;
+}
+
+div.responses > p {
+  margin: 15px 0 -5px 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+div.response {
+  padding-left: 20px;
+}
+
+div.response > p {
+  margin: 0;
+  width: 433px;
+}
+
+div.response > p.title {
+  margin: 15px 0 5px 0;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 div.spec {
@@ -165,6 +191,10 @@ div.example pre {
   color: #fff;
 }
 
+div.example pre.header {
+  background: #444;
+}
+
 div.example span.json-key {
   color: #ed7D00;
 }
@@ -172,7 +202,6 @@ div.example span.json-key {
 div.example span.json-token {
   color: #77bcd7;
 }
-
 
 table {
   border-collapse: collapse;
@@ -185,7 +214,7 @@ td {
 }
 
 td.name {
-  width: 150px;
+  width: 100px;
   font-weight: bold;
   text-align: right;
 }

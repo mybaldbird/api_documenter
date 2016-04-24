@@ -53,15 +53,30 @@ module ApiDocumenter
   end
 
   class Route
-    attr_accessor :verb, :uri, :request, :id
+    attr_accessor :verb, :uri, :id, :request, :responses
+    def initialize
+      @responses = []
+    end
     def content
-      %Q{
+      retval = %Q{
 <div class='route' id='#{@id}'>
 <p>
 <span class='verb'>#{@verb}</span>
 <span class='uri'>#{parse_uri}</span>
 </p>
 #{@request&.content}
+}
+      if @responses.size > 0
+        retval << %Q{
+<div class='responses'>
+<p>Responses</p>
+}
+        @responses.each { |r| retval << r.content }
+        retval << %Q{
+</div>
+}
+      end
+      retval << %Q{
 </div>
 }
     end
@@ -81,11 +96,37 @@ module ApiDocumenter
       retval = %Q{
 <div class='request'>
 <p>#{parse_text(@description)}</p>
+#{@spec&.content}
+</div>
+}
+    end
+  end
+
+  class Response
+    attr_accessor :title, :description, :spec
+    def content
+      retval = %Q{
+<div class='response'>
+<p class='title'>#{@title}</p>
+<p>#{parse_text(@description)}</p>
+#{@spec&.content}
+</div>
+}
+    end
+  end
+
+  class Spec
+    attr_accessor :rows, :example
+    def initialize
+      @rows = []
+    end
+    def content
+      retval = %Q{
 <div class='spec'>
 <table>
 }
-    @spec.table.each do |name, type, desc|
-      retval << %Q{
+      @rows.each do |name, type, desc|
+        retval << %Q{
 <tr>
 <td class='name'>
 <span class='name'>#{name}</span>
@@ -94,27 +135,26 @@ module ApiDocumenter
 <td class='description'>#{parse_text(desc)}</td>
 </tr>
 }
-    end
-    retval << %Q{
+      end
+      retval << %Q{
 </table>
-#{@spec&.content}
-</div>
+#{@example&.content}
 </div>
 }
     end
   end
 
-  class Spec
-    attr_accessor :table, :example
+  class Example
+    attr_accessor :header, :json
     def content
-      return unless @example      
       retval = %Q(
 <div class='example'>
 <p>Example</p>
+<pre class='header'>#{@header}</pre>
 <pre>{
 )
       pre = []
-      @example.each do |k, v|
+      @json.each do |k, v|
         case v
         when NilClass
           pre << %Q{  <span class='json-key'>"#{k}"</span>: <span class='json-token'>NULL</span>}
@@ -169,10 +209,23 @@ module ApiDocumenter
     @d.context.request = r
     wrap_context(r) { yield }
   end
+  def response
+    r = Response.new
+    @d.context.responses << r
+    wrap_context(r) { yield }
+  end
   def spec
     s = Spec.new
     @d.context.spec = s
     wrap_context(s) { yield }
+  end
+  def row arr
+    @d.context.rows << arr
+  end
+  def example
+    e = Example.new
+    @d.context.example = e
+    wrap_context(e) { yield }
   end
   def method_missing method, *args
     # forward setter calls to the object whose block we are in (@d.context)
@@ -191,6 +244,7 @@ module ApiDocumenter
     @d.context = prev_context
   end
   def parse_text text
+    # [foo:bar] => <a href='#foo' class='link'>bar</a>
     text.gsub(/\[([^\]:]*):([^\]]*)\]/, "<a href='\#\\1' class='link'>\\2</a>")
   end
 end

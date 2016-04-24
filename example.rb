@@ -12,32 +12,36 @@ document do
       request do
         description 'Create a new book.'
         spec do
-          table [
-            ['title', 'string', 'Title of the book.'],
-            ['author', 'string', 'Author of the book.'],
-            ['copies', 'integer', 'Number of copies of the book in the library.']
-          ]
-          example(
-            title: 'A Tale of Two Cities',
-            author: 'Charles Dickens',
-            copies: 5
-          )
+          row ['title', 'string', 'Title of the book.']
+          row ['author', 'string', 'Author of the book.']
+          row ['copies', 'integer', 'Number of copies of the book in the library.']
+          example do
+            header 'POST /books'
+            json(
+              title: 'A Tale of Two Cities',
+              author: 'Charles Dickens',
+              copies: 5
+            )
+          end
         end
       end
-    end
-    route do
-      verb 'PATCH'; uri '/books/`id`'; id 'books-update'
-      request do
-        description 'Update the properties of a book.'
+      response do
+        title 'Success'
+        description 'The book was created successfully.'
         spec do
-          table [
-            ['title', 'string', 'Title of the book.'],
-            ['author', 'string', 'Author of the book.'],
-            ['copies', 'integer', 'Number of copies of the book in the library.']
-          ]
-          example(
-            copies: 4
-          )
+          row ['id', 'integer', 'ID of the book.']
+          row ['title', 'string', 'Title of the book.']
+          row ['author', 'string', 'Author of the book.']
+          row ['copies', 'integer', 'Number of copies of the book in the library.']
+          example do
+            header 'Response code 200'
+            json(
+              id: 1,
+              title: 'A Tale of Two Cities',
+              author: 'Charles Dickens',
+              copies: 5
+            )
+          end
         end
       end
     end
@@ -53,32 +57,17 @@ document do
         request do
           description 'Create a new employee.'
           spec do
-            table [
-              ['name', 'string', 'Name of the employee.'],
-              ['title', 'string', 'Job title of the employee.'],
-              ['favorite', 'integer', 'ID of their favorite [books:book].']
-            ]
-            example(
-              name: 'Bob Loblaw',
-              title: 'Internet Marketing Manager',
-              favorite: 1
-            )
-          end
-        end
-      end
-      route do
-        verb 'PATCH'; uri '/employees/`id`'; id 'employees-update'
-        request do
-          description 'Update the properties of an employee.'
-          spec do
-            table [
-              ['name', 'string', 'Name of the employee.'],
-              ['title', 'string', 'Job title of the employee.'],
-              ['favorite', 'integer', 'ID of their favorite [books:book].']
-            ]
-            example(
-              title: 'Janitor'
-            )
+            row ['name', 'string', 'Name of the employee.']
+            row ['title', 'string', 'Job title of the employee.']
+            row ['favorite', 'integer', 'ID of their favorite [books:book].']
+            example do
+              header 'POST /employees'
+              json(
+                name: 'Bob Loblaw',
+                title: 'Internet Marketing Manager',
+                favorite: 1
+              )
+            end
           end
         end
       end
@@ -91,14 +80,15 @@ document do
         request do
           description 'Create a new volunteer.'
           spec do
-            table [
-              ['name', 'string', 'Name of the volunteer.'],
-              ['title', 'string', 'Job title of the volunteer.']
-            ]
-            example(
-              name: 'Vin Diesel',
-              title: 'Bookmobile Driver'
-            )
+            row ['name', 'string', 'Name of the volunteer.']
+            row ['title', 'string', 'Job title of the volunteer.']
+            example do
+              header 'POST /volunteers'
+              json(
+                name: 'Vin Diesel',
+                title: 'Bookmobile Driver'
+              )
+            end
           end
         end
       end
@@ -107,13 +97,14 @@ document do
         request do
           description 'Update the properties of a volunteer.'
           spec do
-            table [
-              ['name', 'string', 'Name of the volunteer.'],
-              ['title', 'string', 'Job title of the volunteer.']
-            ]
-            example(
-              title: 'Library Assistant'
-            )
+            row ['name', 'string', 'Name of the volunteer.']
+            row ['title', 'string', 'Job title of the volunteer.']
+            example do
+              header 'PATCH /volunteers/23'
+              json(
+                title: 'Library Assistant'
+              )
+            end
           end
         end
       end
