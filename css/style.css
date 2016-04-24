@@ -35,20 +35,28 @@ div.toc {
   border-right: 1px solid #999;
 }
 
-div.content {
-  left: 231px;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  box-sizing: border-box;
-  position: absolute;
-  overflow: auto;
+div.toc div {
+  padding: 5px 0 0 10px;
+}
+
+div.toc > div {
+  font-size: 18px;
+}
+
+div.toc > div > div {
+  font-size: 14px;
+}
+
+div.toc > div > div > div {
+  font-size: 12px;
 }
 
 div.toc a {
-  display: block;
-  padding: 5px;
   font-weight: bold;
+}
+
+div.toc div div a:before {
+  content: '✧ '
 }
 
 div.toc a, div.toc a:visited {
@@ -64,8 +72,57 @@ div.toc a:active {
   color: #aaa;
 }
 
+div.content {
+  left: 241px;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  box-sizing: border-box;
+  position: absolute;
+  overflow: auto;
+}
+
+div.content > p.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+div.content > p.description {
+  font-size: 14px;
+  margin: 0;
+}
+
+a.link {
+  color: green;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+div.group > p.name {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 15px 0 5px;
+}
+
+div.group > p.name:before {
+  content: '« '
+}
+
+div.group > p.name:after {
+  content: ' »'
+}
+
+div.group > p.description {
+  font-size: 14px;
+  margin: 0;
+}
+
+div.group > div {
+  padding-left: 20px;
+}
+
 div.route {
-  padding-left: 10px;
   margin: 0;
 }
 
@@ -75,7 +132,7 @@ div.route > p {
   font-weight: bold;
 }
 
-div.input > p {
+div.request > p {
   margin: 0;
 }
 
