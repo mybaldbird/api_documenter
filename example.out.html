@@ -1,338 +1,267 @@
-
 <!DOCTYPE html>
 <html lang='en'>
-<head>
-<meta charset='UTF-8' />
-<html>
-<head>
-<title>Library</title>
-<link href='css/style.css' rel='stylesheet' type='text/css' charset='UTF-8' />
-</head>
-<body>
+  <head>
+    <meta charset='UTF-8' />
+    <title><a href='#foo' class='link'>bar</a>Library</title>
+    <link href='css/style.css' rel='stylesheet' type='text/css' charset='UTF-8' />
+  </head>
+  <body>
+    <div class='toc'>
+      <div>
+        <a href='#books'>Books:</a>
+        <div><a href='#books-create'>POST /books</a></div>
+      </div>
+      <div>
+        <a href='#staff'>Staff:</a>
+        <div>
+          <a href='#employees'>Employees:</a>
+          <div><a href='#employees-create'>POST /employees</a></div>
+        </div>
+        <div>
+          <a href='#volunteers'>Volunteers:</a>
+          <div><a href='#volunteers-create'>POST /volunteers</a></div>
+          <div><a href='#volunteers-update'>PATCH /volunteers/&lt;id&gt;</a></div>
+        </div>
+      </div>
+    </div>
 
-<div class='toc'>
-
-<div>
-<a href='#books'>Books:</a>
-
-<div><a href='#books-create'>POST /books</a></div>
-
-</div>
-
-<div>
-<a href='#staff'>Staff:</a>
-
-<div>
-<a href='#employees'>Employees:</a>
-
-<div><a href='#employees-create'>POST /employees</a></div>
-
-</div>
-
-<div>
-<a href='#volunteers'>Volunteers:</a>
-
-<div><a href='#volunteers-create'>POST /volunteers</a></div>
-
-<div><a href='#volunteers-update'>PATCH /volunteers/&lt;id&gt;</a></div>
-
-</div>
-
-</div>
-
-</div>
-
-<div class='content'>
-
-<p class='title'>Library</p>
-<p class='description'>API for managing a library.</p>
-
-<div class='group' id='books'>
-<p class='name'>Books</p>
-<p class='description'>API calls for the books object.</p>
-
-<div class='route' id='books-create'>
-<p>
-<span class='verb'>POST</span>
-<span class='uri'>/books</span>
-</p>
-
-<div class='request'>
-<p>Create a new book.</p>
-
-<div class='spec'>
-<table>
-
-<tr>
-<td class='name'>
-<span class='name'>title</span>
-<span class='type'>string</span>
-</td>
-<td class='description'>Title of the book.</td>
-</tr>
-
-<tr>
-<td class='name'>
-<span class='name'>author</span>
-<span class='type'>string</span>
-</td>
-<td class='description'>Author of the book.</td>
-</tr>
-
-<tr>
-<td class='name'>
-<span class='name'>copies</span>
-<span class='type'>integer</span>
-</td>
-<td class='description'>Number of copies of the book in the library.</td>
-</tr>
-
-</table>
-
-<div class='example'>
-<p>Example</p>
-<pre class='header'>POST /books</pre>
+    <div class='content'>
+      <p class='title'><a href='#foo' class='link'>bar</a>Library</p>
+      <p class='description'>API for managing a library.</p>
+      <div class='group' id='books'>
+        <p class='name'>Books</p>
+        <p class='description'>API calls for the books object.</p>
+        <div class='route' id='books-create'>
+          <p>
+            <span class='verb'>POST</span>
+            <span class='uri'>/books</span>
+          </p>
+          <div class='request'>
+            <p>Create a new book.</p>
+            <div class='spec'>
+              <table>
+                <tr>
+                  <td class='name'>
+                    <span class='name'>title</span>
+                    <span class='type'>string</span>
+                  </td>
+                  <td class='description'>Title of the book.</td>
+                </tr>
+                <tr>
+                  <td class='name'>
+                    <span class='name'>author</span>
+                    <span class='type'>string</span>
+                  </td>
+                  <td class='description'>Author of the book.</td>
+                </tr>
+                <tr>
+                  <td class='name'>
+                    <span class='name'>copies</span>
+                    <span class='type'>integer</span>
+                  </td>
+                  <td class='description'>Number of copies of the book in the library.</td>
+                </tr>
+              </table>
+              <div class='example'>
+                <p>Example</p>
+                <pre class='header'>POST /books</pre>
 <pre>{
   <span class='json-key'>"title"</span>: "A Tale of Two Cities",
   <span class='json-key'>"author"</span>: "Charles Dickens",
   <span class='json-key'>"copies"</span>: <span class='json-token'>5</span>
 }</pre>
-</div>
+              </div>
 
-</div>
+            </div>
 
-</div>
+          </div>
 
-
-<div class='responses'>
-<p>Responses</p>
-
-<div class='response'>
-<p class='title'>Success</p>
-<p>The book was created successfully.</p>
-
-<div class='spec'>
-<table>
-
-<tr>
-<td class='name'>
-<span class='name'>id</span>
-<span class='type'>integer</span>
-</td>
-<td class='description'>ID of the book.</td>
-</tr>
-
-<tr>
-<td class='name'>
-<span class='name'>title</span>
-<span class='type'>string</span>
-</td>
-<td class='description'>Title of the book.</td>
-</tr>
-
-<tr>
-<td class='name'>
-<span class='name'>author</span>
-<span class='type'>string</span>
-</td>
-<td class='description'>Author of the book.</td>
-</tr>
-
-<tr>
-<td class='name'>
-<span class='name'>copies</span>
-<span class='type'>integer</span>
-</td>
-<td class='description'>Number of copies of the book in the library.</td>
-</tr>
-
-</table>
-
-<div class='example'>
-<p>Example</p>
-<pre class='header'>Response code 200</pre>
+          <div class='responses'>
+            <p>Responses</p>
+            <div class='response'>
+              <p class='title'>Success</p>
+              <p>The book was created successfully.</p>
+              <div class='spec'>
+                <table>
+                  <tr>
+                    <td class='name'>
+                      <span class='name'>id</span>
+                      <span class='type'>integer</span>
+                    </td>
+                    <td class='description'>ID of the book.</td>
+                  </tr>
+                  <tr>
+                    <td class='name'>
+                      <span class='name'>title</span>
+                      <span class='type'>string</span>
+                    </td>
+                    <td class='description'>Title of the book.</td>
+                  </tr>
+                  <tr>
+                    <td class='name'>
+                      <span class='name'>author</span>
+                      <span class='type'>string</span>
+                    </td>
+                    <td class='description'>Author of the book.</td>
+                  </tr>
+                  <tr>
+                    <td class='name'>
+                      <span class='name'>copies</span>
+                      <span class='type'>integer</span>
+                    </td>
+                    <td class='description'>Number of copies of the book in the library.</td>
+                  </tr>
+                </table>
+                <div class='example'>
+                  <p>Example</p>
+                  <pre class='header'>Response code 200</pre>
 <pre>{
   <span class='json-key'>"id"</span>: <span class='json-token'>1</span>,
   <span class='json-key'>"title"</span>: "A Tale of Two Cities",
   <span class='json-key'>"author"</span>: "Charles Dickens",
   <span class='json-key'>"copies"</span>: <span class='json-token'>5</span>
 }</pre>
-</div>
+                </div>
 
-</div>
+              </div>
 
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<div class='group' id='staff'>
-<p class='name'>Staff</p>
-<p class='description'>API calls for managing staff members.</p>
-
-<div class='group' id='employees'>
-<p class='name'>Employees</p>
-<p class='description'>Staff members earning wages.</p>
-
-<div class='route' id='employees-create'>
-<p>
-<span class='verb'>POST</span>
-<span class='uri'>/employees</span>
-</p>
-
-<div class='request'>
-<p>Create a new employee.</p>
-
-<div class='spec'>
-<table>
-
-<tr>
-<td class='name'>
-<span class='name'>name</span>
-<span class='type'>string</span>
-</td>
-<td class='description'>Name of the employee.</td>
-</tr>
-
-<tr>
-<td class='name'>
-<span class='name'>title</span>
-<span class='type'>string</span>
-</td>
-<td class='description'>Job title of the employee.</td>
-</tr>
-
-<tr>
-<td class='name'>
-<span class='name'>favorite</span>
-<span class='type'>integer</span>
-</td>
-<td class='description'>ID of their favorite <a href='#books' class='link'>book</a>.</td>
-</tr>
-
-</table>
-
-<div class='example'>
-<p>Example</p>
-<pre class='header'>POST /employees</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='group' id='staff'>
+        <p class='name'>Staff</p>
+        <p class='description'>API calls for managing staff members.</p>
+        <div class='group' id='employees'>
+          <p class='name'>Employees</p>
+          <p class='description'>Staff members earning wages.</p>
+          <div class='route' id='employees-create'>
+            <p>
+              <span class='verb'>POST</span>
+              <span class='uri'>/employees</span>
+            </p>
+            <div class='request'>
+              <p>Create a new employee.</p>
+              <div class='spec'>
+                <table>
+                  <tr>
+                    <td class='name'>
+                      <span class='name'>name</span>
+                      <span class='type'>string</span>
+                    </td>
+                    <td class='description'>Name of the employee.</td>
+                  </tr>
+                  <tr>
+                    <td class='name'>
+                      <span class='name'>title</span>
+                      <span class='type'>string</span>
+                    </td>
+                    <td class='description'>Job title of the employee.</td>
+                  </tr>
+                  <tr>
+                    <td class='name'>
+                      <span class='name'>favorite</span>
+                      <span class='type'>integer</span>
+                    </td>
+                    <td class='description'>ID of their favorite <a href='#books' class='link'>book</a>.</td>
+                  </tr>
+                </table>
+                <div class='example'>
+                  <p>Example</p>
+                  <pre class='header'>POST /employees</pre>
 <pre>{
   <span class='json-key'>"name"</span>: "Bob Loblaw",
   <span class='json-key'>"title"</span>: "Internet Marketing Manager",
   <span class='json-key'>"favorite"</span>: <span class='json-token'>1</span>
 }</pre>
-</div>
+                </div>
 
-</div>
+              </div>
 
-</div>
+            </div>
 
-
-</div>
-
-</div>
-
-<div class='group' id='volunteers'>
-<p class='name'>Volunteers</p>
-<p class='description'>Staff members not earning wages.</p>
-
-<div class='route' id='volunteers-create'>
-<p>
-<span class='verb'>POST</span>
-<span class='uri'>/volunteers</span>
-</p>
-
-<div class='request'>
-<p>Create a new volunteer.</p>
-
-<div class='spec'>
-<table>
-
-<tr>
-<td class='name'>
-<span class='name'>name</span>
-<span class='type'>string</span>
-</td>
-<td class='description'>Name of the volunteer.</td>
-</tr>
-
-<tr>
-<td class='name'>
-<span class='name'>title</span>
-<span class='type'>string</span>
-</td>
-<td class='description'>Job title of the volunteer.</td>
-</tr>
-
-</table>
-
-<div class='example'>
-<p>Example</p>
-<pre class='header'>POST /volunteers</pre>
+          </div>
+        </div>
+        <div class='group' id='volunteers'>
+          <p class='name'>Volunteers</p>
+          <p class='description'>Staff members not earning wages.</p>
+          <div class='route' id='volunteers-create'>
+            <p>
+              <span class='verb'>POST</span>
+              <span class='uri'>/volunteers</span>
+            </p>
+            <div class='request'>
+              <p>Create a new volunteer.</p>
+              <div class='spec'>
+                <table>
+                  <tr>
+                    <td class='name'>
+                      <span class='name'>name</span>
+                      <span class='type'>string</span>
+                    </td>
+                    <td class='description'>Name of the volunteer.</td>
+                  </tr>
+                  <tr>
+                    <td class='name'>
+                      <span class='name'>title</span>
+                      <span class='type'>string</span>
+                    </td>
+                    <td class='description'>Job title of the volunteer.</td>
+                  </tr>
+                </table>
+                <div class='example'>
+                  <p>Example</p>
+                  <pre class='header'>POST /volunteers</pre>
 <pre>{
   <span class='json-key'>"name"</span>: "Vin Diesel",
   <span class='json-key'>"title"</span>: "Bookmobile Driver"
 }</pre>
-</div>
+                </div>
 
-</div>
+              </div>
 
-</div>
+            </div>
 
-
-</div>
-
-<div class='route' id='volunteers-update'>
-<p>
-<span class='verb'>PATCH</span>
-<span class='uri'>/volunteers/&lt;id&gt;</span>
-</p>
-
-<div class='request'>
-<p>Update the properties of a volunteer.</p>
-
-<div class='spec'>
-<table>
-
-<tr>
-<td class='name'>
-<span class='name'>name</span>
-<span class='type'>string</span>
-</td>
-<td class='description'>Name of the volunteer.</td>
-</tr>
-
-<tr>
-<td class='name'>
-<span class='name'>title</span>
-<span class='type'>string</span>
-</td>
-<td class='description'>Job title of the volunteer.</td>
-</tr>
-
-</table>
-
-<div class='example'>
-<p>Example</p>
-<pre class='header'>PATCH /volunteers/23</pre>
+          </div>
+          <div class='route' id='volunteers-update'>
+            <p>
+              <span class='verb'>PATCH</span>
+              <span class='uri'>/volunteers/&lt;id&gt;</span>
+            </p>
+            <div class='request'>
+              <p>Update the properties of a volunteer.</p>
+              <div class='spec'>
+                <table>
+                  <tr>
+                    <td class='name'>
+                      <span class='name'>name</span>
+                      <span class='type'>string</span>
+                    </td>
+                    <td class='description'>Name of the volunteer.</td>
+                  </tr>
+                  <tr>
+                    <td class='name'>
+                      <span class='name'>title</span>
+                      <span class='type'>string</span>
+                    </td>
+                    <td class='description'>Job title of the volunteer.</td>
+                  </tr>
+                </table>
+                <div class='example'>
+                  <p>Example</p>
+                  <pre class='header'>PATCH /volunteers/23</pre>
 <pre>{
   <span class='json-key'>"title"</span>: "Library Assistant"
 }</pre>
-</div>
+                </div>
 
-</div>
+              </div>
 
-</div>
+            </div>
 
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-</body>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

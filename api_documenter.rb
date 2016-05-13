@@ -6,21 +6,35 @@ module ApiDocumenter
       @children = []
     end
     def content
-      retval = %Q{
-<p class='title'>#{@title}</p>
-<p class='description'>#{parse_text(@description)}</p>
-}
-      @children.each { |c| retval << c.content }
-      retval
+      retval = <<~EOT
+        <!DOCTYPE html>
+        <html lang='en'>
+          <head>
+            <meta charset='UTF-8' />
+            <title>#{@title}</title>
+            <link href='css/style.css' rel='stylesheet' type='text/css' charset='UTF-8' />
+          </head>
+          <body>
+        #{toc('    ')}
+            <div class='content'>
+              <p class='title'>#{@title}</p>
+              <p class='description'>#{parse_text(@description)}</p>
+      EOT
+      @children.each { |c| retval << c.content('      ') }
+      retval << <<~EOT
+            </div>
+          </body>
+        </html>
+      EOT
     end
-    def toc
-      retval = %Q{
-<div class='toc'>
-}
-      @children.each { |c| retval << c.toc }
-      retval << %Q{
-</div>
-}
+    def toc i
+      retval = <<~EOT
+        #{i}<div class='toc'>
+      EOT
+      @children.each { |c| retval << c.toc(i + '  ') }
+      retval << <<~EOT
+        #{i}</div>
+      EOT
     end
   end
 
@@ -29,26 +43,26 @@ module ApiDocumenter
     def initialize
       @children = []
     end
-    def content
-      retval = %Q{
-<div class='group' id='#{@id}'>
-<p class='name'>#{@name}</p>
-<p class='description'>#{parse_text(@description)}</p>
-}
-      @children.each { |c| retval << c.content }
-      retval << %Q{
-</div>
-}
+    def content i
+      retval = <<~EOT
+        #{i}<div class='group' id='#{@id}'>
+          #{i}<p class='name'>#{@name}</p>
+          #{i}<p class='description'>#{parse_text(@description)}</p>
+      EOT
+      @children.each { |c| retval << c.content(i + '  ') }
+      retval << <<~EOT
+        #{i}</div>
+      EOT
     end
-    def toc
-      retval = %Q{
-<div>
-<a href='\##{@id}'>#{@name}:</a>
-}
-      @children.each { |c| retval << c.toc }
-      retval << %Q{
-</div>
-}
+    def toc i
+      retval = <<~EOT
+        #{i}<div>
+          #{i}<a href='\##{@id}'>#{@name}:</a>
+      EOT
+      @children.each { |c| retval << c.toc(i + '  ') }
+      retval << <<~EOT
+        #{i}</div>
+      EOT
     end
   end
 
@@ -57,33 +71,33 @@ module ApiDocumenter
     def initialize
       @responses = []
     end
-    def content
-      retval = %Q{
-<div class='route' id='#{@id}'>
-<p>
-<span class='verb'>#{@verb}</span>
-<span class='uri'>#{parse_uri}</span>
-</p>
-#{@request&.content}
-}
+    def content i
+      retval = <<~EOT
+        #{i}<div class='route' id='#{@id}'>
+          #{i}<p>
+            #{i}<span class='verb'>#{@verb}</span>
+            #{i}<span class='uri'>#{parse_uri}</span>
+          #{i}</p>
+        #{@request&.content(i + '  ')}
+      EOT
       if @responses.size > 0
-        retval << %Q{
-<div class='responses'>
-<p>Responses</p>
-}
-        @responses.each { |r| retval << r.content }
-        retval << %Q{
-</div>
-}
+        retval << <<~EOT
+          #{i}  <div class='responses'>
+          #{i}    <p>Responses</p>
+        EOT
+        @responses.each { |r| retval << r.content(i + '    ') }
+        retval << <<~EOT
+          #{i}  </div>
+        EOT
       end
-      retval << %Q{
-</div>
-}
+      retval << <<~EOT
+        #{i}</div>
+      EOT
     end
-    def toc
-      %Q{
-<div><a href='\##{@id}'>#{@verb} #{parse_uri}</a></div>
-}
+    def toc i
+      <<~EOT
+        #{i}<div><a href='\##{@id}'>#{@verb} #{parse_uri}</a></div>
+      EOT
     end
     def parse_uri
       retval = @uri&.gsub(/`([^`]*)`/, '&lt;\1&gt;')
@@ -92,26 +106,26 @@ module ApiDocumenter
 
   class Request
     attr_accessor :description, :spec
-    def content
-      retval = %Q{
-<div class='request'>
-<p>#{parse_text(@description)}</p>
-#{@spec&.content}
-</div>
-}
+    def content i
+      retval = <<~EOT
+        #{i}<div class='request'>
+          #{i}<p>#{parse_text(@description)}</p>
+        #{@spec&.content(i + '  ')}
+        #{i}</div>
+      EOT
     end
   end
 
   class Response
     attr_accessor :title, :description, :spec
-    def content
-      retval = %Q{
-<div class='response'>
-<p class='title'>#{@title}</p>
-<p>#{parse_text(@description)}</p>
-#{@spec&.content}
-</div>
-}
+    def content i
+      retval = <<~EOT
+        #{i}<div class='response'>
+          #{i}<p class='title'>#{@title}</p>
+          #{i}<p>#{parse_text(@description)}</p>
+        #{@spec&.content(i + '  ')}
+        #{i}</div>
+      EOT
     end
   end
 
@@ -120,39 +134,39 @@ module ApiDocumenter
     def initialize
       @rows = []
     end
-    def content
-      retval = %Q{
-<div class='spec'>
-<table>
-}
+    def content i
+      retval = <<~EOT
+        #{i}<div class='spec'>
+          #{i}<table>
+      EOT
       @rows.each do |name, type, desc|
-        retval << %Q{
-<tr>
-<td class='name'>
-<span class='name'>#{name}</span>
-<span class='type'>#{type}</span>
-</td>
-<td class='description'>#{parse_text(desc)}</td>
-</tr>
-}
+        retval << <<~EOT
+          #{i}    <tr>
+            #{i}    <td class='name'>
+              #{i}    <span class='name'>#{name}</span>
+              #{i}    <span class='type'>#{type}</span>
+            #{i}    </td>
+            #{i}    <td class='description'>#{parse_text(desc)}</td>
+          #{i}    </tr>
+        EOT
       end
-      retval << %Q{
-</table>
-#{@example&.content}
-</div>
-}
+      retval << <<~EOT
+          #{i}</table>
+        #{@example&.content(i + '  ')}
+        #{i}</div>
+      EOT
     end
   end
 
   class Example
     attr_accessor :header, :json
-    def content
-      retval = %Q(
-<div class='example'>
-<p>Example</p>
-<pre class='header'>#{@header}</pre>
-<pre>{
-)
+    def content i
+      retval = <<~EOT
+        #{i}<div class='example'>
+          #{i}<p>Example</p>
+          #{i}<pre class='header'>#{@header}</pre>
+        <pre>{
+      EOT
       pre = []
       @json.each do |k, v|
         case v
@@ -164,84 +178,89 @@ module ApiDocumenter
           pre << %Q{  <span class='json-key'>"#{k}"</span>: <span class='json-token'>#{v}</span>}
         end
       end
-      retval << pre.join(",\n") << %Q(
-}</pre>
-</div>
-)
+      retval << pre.join(",\n") << <<~EOT
+
+        }</pre>
+        #{i}</div>
+      EOT
     end
   end
 
   module_function
+  # blocks
   def document
-    @d = Document.new
-    wrap_context(@d) { yield }
-    puts %Q{
-<!DOCTYPE html>
-<html lang='en'>
-<head>
-<meta charset='UTF-8' />
-<html>
-<head>
-<title>#{@d.title}</title>
-<link href='css/style.css' rel='stylesheet' type='text/css' charset='UTF-8' />
-</head>
-<body>
-#{@d.toc}
-<div class='content'>
-#{@d.content}
-</div>
-</body>
-</html>
-}
+    $DOC = Document.new
+    wrap_context($DOC) { yield }
+    puts $DOC.content
   end
   def group
     g = Group.new
-    @d.context.children << g
+    $DOC.context.children << g
     wrap_context(g) { yield }
   end
   def route
     r = Route.new
-    @d.context.children << r
+    $DOC.context.children << r
     wrap_context(r) { yield }
   end
   def request
     r = Request.new
-    @d.context.request = r
+    $DOC.context.request = r
     wrap_context(r) { yield }
   end
   def response
     r = Response.new
-    @d.context.responses << r
+    $DOC.context.responses << r
     wrap_context(r) { yield }
   end
   def spec
     s = Spec.new
-    @d.context.spec = s
+    $DOC.context.spec = s
     wrap_context(s) { yield }
-  end
-  def row arr
-    @d.context.rows << arr
   end
   def example
     e = Example.new
-    @d.context.example = e
+    $DOC.context.example = e
     wrap_context(e) { yield }
   end
-  def method_missing method, *args
-    # forward setter calls to the object whose block we are in (@d.context)
-    # wrap_context() sets @d.context
-    new_method = "#{method}=".to_sym
-    super unless @d # endless loop protection
-    super unless @d.context.respond_to?(new_method) # endless loop protection
-    @d.context.send(new_method, *args)
+
+  # setters
+  def title t
+    $DOC.context.title = t
   end
+  def description d
+    $DOC.context.description = d
+  end
+  def name n
+    $DOC.context.name = n
+  end
+  def id i
+    $DOC.context.id = i
+  end
+  def verb v
+    $DOC.context.verb = v
+  end
+  def uri u
+    $DOC.context.uri = u
+  end
+  def row arr
+    $DOC.context.rows << arr
+  end
+  def header h
+    $DOC.context.header = h
+  end
+  def json j
+    $DOC.context.json = j
+  end
+
+  # helpers
   def wrap_context new_context
     # set the context before diving into the block
-    prev_context = @d.context
-    @d.context = new_context
+    prev_context = $DOC.context
+    $DOC.context = new_context
     yield
     # then set it back when we exit out
-    @d.context = prev_context
+    $DOC.context = prev_context
   end
   def parse_text text
     # [foo:bar] => <a href='#foo' class='link'>bar</a>
