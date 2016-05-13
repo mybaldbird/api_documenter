@@ -80,6 +80,7 @@ div.content {
   box-sizing: border-box;
   position: absolute;
   overflow: auto;
+  padding-bottom: 10px;
 }
 
 div.content > p.title {
