@@ -203,54 +203,29 @@ module ApiDocumenter
     $DOC.context.children << r
     wrap_context(r) { yield }
   end
-  def request
-    r = Request.new
-    $DOC.context.request = r
-    wrap_context(r) { yield }
-  end
   def response
     r = Response.new
     $DOC.context.responses << r
     wrap_context(r) { yield }
   end
-  def spec
-    s = Spec.new
-    $DOC.context.spec = s
-    wrap_context(s) { yield }
-  end
-  def example
-    e = Example.new
-    $DOC.context.example = e
-    wrap_context(e) { yield }
+  blocks = %w(request spec example)
+  blocks.each do |b|
+    define_method b do |&block|
+      obj = ApiDocumenter.const_get(b.capitalize).new
+      $DOC.context.send "#{b}=", obj
+      wrap_context(obj, &block)
+    end
   end
 
   # setters
-  def title t
-    $DOC.context.title = t
-  end
-  def description d
-    $DOC.context.description = d
-  end
-  def name n
-    $DOC.context.name = n
-  end
-  def id i
-    $DOC.context.id = i
-  end
-  def verb v
-    $DOC.context.verb = v
-  end
-  def uri u
-    $DOC.context.uri = u
+  setters = %w(title description name id verb uri header json)
+  setters.each do |s|
+    define_method s do |val|
+      $DOC.context.send "#{s}=", val
+    end
   end
   def row arr
     $DOC.context.rows << arr
-  end
-  def header h
-    $DOC.context.header = h
-  end
-  def json j
-    $DOC.context.json = j
   end
 
   # helpers
